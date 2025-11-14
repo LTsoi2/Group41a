@@ -4,7 +4,7 @@
         <div class="col-md-8 mx-auto">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/pets">我的宠物</a></li>
+                    <li class="breadcrumb-item"><a href="/pets">My Pets</a></li>
                     <li class="breadcrumb-item active"><%= pet.name %></li>
                 </ol>
             </nav>
@@ -12,36 +12,50 @@
             <div class="card">
                 <div class="card-header">
                     <h2 class="mb-0">
-                        <span style="color: <%= pet.customizations.color %>">●</span>
-                        <%= pet.name %>
+                        <!-- Species emoji based on pet species -->
+                        <% 
+                            const speciesEmoji = {
+                                'dragon': '🐉',
+                                'cat': '🐱', 
+                                'dog': '🐶',
+                                'rat': '🐀',
+                                'elf': '🧝',
+                                'robot': '🤖',
+                                'wolf': '🐺',
+                                'deer': '🦌',
+                                'duck': '🦆',
+                                'bear': '🐻'
+                            };
+                        %>
+                        <%= speciesEmoji[pet.species] || '🐾' %> <%= pet.name %>
                         <span class="badge bg-<%= 
-                            pet.rarity === '传说' ? 'danger' : 
-                            pet.rarity === '史诗' ? 'warning' :
-                            pet.rarity === '稀有' ? 'info' : 'secondary'
+                            pet.rarity === 'Legendary' ? 'danger' : 
+                            pet.rarity === 'Epic' ? 'warning' :
+                            pet.rarity === 'Rare' ? 'info' : 'secondary'
                         %> float-end"><%= pet.rarity %></span>
                     </h2>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h5>基本信息</h5>
-                            <p><strong>物种:</strong> <%= pet.species %></p>
-                            <p><strong>出生日期:</strong> <%= pet.birthDate.toLocaleDateString() %></p>
+                            <h5>Basic Information</h5>
+                            <p><strong>Species:</strong> <%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %></p>
+                            <p><strong>Birth Date:</strong> <%= pet.birthDate.toLocaleDateString() %></p>
                             
-                            <% if (pet.traits.length > 0) { %>
-                                <p><strong>特征:</strong><br>
+                            <% if (pet.traits && pet.traits.length > 0) { %>
+                                <p><strong>Traits:</strong><br>
                                 <% pet.traits.forEach(trait => { %>
-                                    <span class="badge bg-primary me-1"><%= trait %></span>
+                                    <span class="badge bg-primary me-1 mb-1"><%= trait %></span>
                                 <% }) %>
                                 </p>
                             <% } %>
                         </div>
                         
                         <div class="col-md-6">
-                            <h5>状态</h5>
+                            <h5>Status</h5>
                             
                             <div class="mb-3">
-                                <label>饥饿: <%= pet.stats.hunger %>/100</label>
+                                <label>Hunger: <%= pet.stats.hunger %>/100</label>
                                 <div class="progress">
                                     <div class="progress-bar bg-<%= pet.stats.hunger > 50 ? 'success' : 'warning' %>" 
                                          style="width: <%= pet.stats.hunger %>%"></div>
@@ -49,7 +63,7 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label>快乐: <%= pet.stats.happiness %>/100</label>
+                                <label>Happiness: <%= pet.stats.happiness %>/100</label>
                                 <div class="progress">
                                     <div class="progress-bar bg-<%= pet.stats.happiness > 50 ? 'success' : 'warning' %>" 
                                          style="width: <%= pet.stats.happiness %>%"></div>
@@ -57,7 +71,7 @@
                             </div>
                             
                             <div class="mb-3">
-                                <label>能量: <%= pet.stats.energy %>/100</label>
+                                <label>Energy: <%= pet.stats.energy %>/100</label>
                                 <div class="progress">
                                     <div class="progress-bar bg-<%= pet.stats.energy > 50 ? 'success' : 'warning' %>" 
                                          style="width: <%= pet.stats.energy %>%"></div>
@@ -66,41 +80,41 @@
                         </div>
                     </div>
 
-                    <!-- 照顾按钮 -->
+                    <!-- Care buttons -->
                     <div class="row mt-4">
                         <div class="col-12">
-                            <h5>照顾宠物</h5>
+                            <h5>Care for Your Pet</h5>
                             <div class="d-grid gap-2 d-md-flex">
                                 <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
                                     <input type="hidden" name="action" value="feed">
-                                    <button type="submit" class="btn btn-success">🍖 喂食</button>
+                                    <button type="submit" class="btn btn-success">🍖 Feed</button>
                                 </form>
                                 <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
                                     <input type="hidden" name="action" value="play">
-                                    <button type="submit" class="btn btn-info">🎾 玩耍</button>
+                                    <button type="submit" class="btn btn-info">🎾 Play</button>
                                 </form>
                                 <form method="POST" action="/pets/<%= pet._id %>/care">
                                     <input type="hidden" name="action" value="rest">
-                                    <button type="submit" class="btn btn-warning">😴 休息</button>
+                                    <button type="submit" class="btn btn-warning">😴 Rest</button>
                                 </form>
                             </div>
                         </div>
                     </div>
 
-                    <% if (pet.needsCare()) { %>
+                    <% if (pet.needsCare && pet.needsCare()) { %>
                         <div class="alert alert-warning mt-3">
-                            <strong>⚠️ 注意!</strong> 你的宠物需要照顾！请喂食、玩耍或让它休息。
+                            <strong>⚠️ Attention!</strong> Your pet needs care! Please feed, play, or let it rest.
                         </div>
                     <% } %>
                 </div>
                 <div class="card-footer">
                     <form action="/pets/<%= pet._id %>/delete" method="POST" class="d-inline">
                         <button type="submit" class="btn btn-danger" 
-                                onclick="return confirm('确定要送走<%= pet.name %>吗？这个操作无法撤销！')">
-                            🚪 送走宠物
+                                onclick="return confirm('Are you sure you want to release <%= pet.name %>? This action cannot be undone!')">
+                            🚪 Release Pet
                         </button>
                     </form>
-                    <a href="/pets" class="btn btn-outline-secondary float-end">返回列表</a>
+                    <a href="/pets" class="btn btn-outline-secondary float-end">Back to List</a>
                 </div>
             </div>
         </div>
