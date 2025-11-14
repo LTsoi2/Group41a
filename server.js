@@ -7,79 +7,159 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 中间件
+// Middleware
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
   name: 'session',
-  keys: [process.env.SESSION_SECRET || 'fallback-secret-key'],
-  maxAge: 24 * 60 * 60 * 1000 // 24小时
+  keys: [process.env.SESSION_SECRET || 'digital-pet-sanctuary-secret-key-2024'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }));
 
-// 视图引擎
+// View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// 数据库连接
+// Database connection
 const MONGODB_URI = process.env.MONGODB_URI;
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .then(() => {
-  console.log('✅ 成功连接到 MongoDB Atlas!');
-  console.log('📊 数据库:', mongoose.connection.name);
+  console.log('✅ Successfully connected to MongoDB Atlas!');
+  console.log('📊 Database:', mongoose.connection.name);
 })
 .catch(err => {
-  console.log('❌ 数据库连接失败:', err.message);
+  console.log('❌ Database connection failed:', err.message);
 });
 
-// 用户数据中间件
+// User data middleware - make user data available to all views
 app.use((req, res, next) => {
   res.locals.user = req.session.userId ? { 
-    username: req.session.username 
+    username: req.session.username,
+    userId: req.session.userId 
   } : null;
   next();
 });
 
-// 引入路由
+// Import routes
 const authRoutes = require('./routes/auth');
 const petRoutes = require('./routes/pets');
-
-// 引入API路由
 const apiRoutes = require('./routes/api');
 
-// 使用API路由，前缀为 /api
-app.use('/api', apiRoutes);
-
-// 使用路由
+// Use routes
 app.use('/auth', authRoutes);
 app.use('/pets', petRoutes);
+app.use('/api', apiRoutes);
 
-// 在路由定义后添加调试中间件
+// Import models for dashboard
+const VirtualPet = require('./models/VirtualPet');
+
+// Home route
+app.get('/', (req, res) => {
+  res.render('index', {
+    title: 'Digital Pet Sanctuary',
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+  });
+});
+
+// Dashboard route with pets data
+app.get('/dashboard', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect('/auth/login');
+    }
+    
+    // Get user's pets for the dashboard
+    const pets = await VirtualPet.find({ owner: req.session.userId });
+    
+    res.render('dashboard', {
+      title: 'My Dashboard',
+      username: req.session.username,
+      pets: pets,
+      dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    });
+  } catch (error) {
+    console.error('Error fetching pets for dashboard:', error);
+    res.render('dashboard', {
+      title: 'My Dashboard',
+      username: req.session.username,
+      pets: [],
+      dbStatus: 'Disconnected'
+    });
+  }
+});
+
+// API status endpoint
+app.get('/api/status', (req, res) => {
+  res.json({
+    status: 'online',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Health check endpoint for Render
+app.get('/health', (req, res) => {
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  
+  if (dbStatus === 'connected') {
+    res.status(200).json({
+      status: 'healthy',
+      database: 'connected',
+      timestamp: new Date().toISOString()
+    });
+  } else {
+    res.status(503).json({
+      status: 'unhealthy',
+      database: 'disconnected',
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).render('error', {
+    title: 'Server Error',
+    message: 'An internal server error occurred. Please try again later.',
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).render('error', {
+    title: 'Page Not Found',
+    message: 'Sorry, the page you are looking for does not exist.',
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+  });
+});
+
+// Request logging middleware (optional)
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
 
-// 主页路由
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: '数字宠物收容所',
-    dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+// Start server
+app.listen(PORT, () => {
+  console.log(`🐾 Digital Pet Sanctuary running on: http://localhost:${PORT}`);
+  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Press Ctrl+C to stop the server`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('\n🛑 Shutting down server gracefully...');
+  mongoose.connection.close(() => {
+    console.log('✅ MongoDB connection closed.');
+    process.exit(0);
   });
 });
 
-// 仪表板路由
-app.get('/dashboard', (req, res) => {
-  if (!req.session.userId) {
-    return res.redirect('/auth/login');
-  }
-  res.redirect('/pets');
-});
-
-// 启动服务器
-app.listen(PORT, () => {
-  console.log(`🐾 服务器运行在: http://localhost:${PORT}`);
-});
+module.exports = app;

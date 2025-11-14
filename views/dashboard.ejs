@@ -1,38 +1,241 @@
-<%- include('partials/header', { title: '我的仪表板' }) %>
-<div class="row">
-    <div class="col-md-8 mx-auto">
-        <h1 class="display-4">欢迎, <%= username %>! 👋</h1>
-        <p class="lead">这是你的虚拟宠物管理仪表板</p>
-        
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">🐉 我的宠物</h5>
-                        <p class="card-text">查看和管理你的虚拟宠物</p>
-                        <a href="#" class="btn btn-outline-primary">查看宠物</a>
+<%- include('partials/header', { title: 'My Dashboard' }) %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Welcome Section -->
+            <div class="jumbotron bg-light p-5 rounded mb-4">
+                <h1 class="display-4">Welcome, <%= username %>! 👋</h1>
+                <p class="lead">This is your virtual pet management dashboard. Manage your pets and explore the sanctuary.</p>
+                <hr class="my-4">
+                <p>Track your pets' status, adopt new companions, and ensure they're happy and healthy.</p>
+            </div>
+
+            <!-- Quick Stats Section -->
+            <div class="row mb-5">
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h2 class="text-primary"><i class="fas fa-paw"></i> <span id="petCount">0</span></h2>
+                            <p class="card-text">Total Pets</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h2 class="text-warning"><i class="fas fa-utensils"></i> <span id="hungryCount">0</span></h2>
+                            <p class="card-text">Need Feeding</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h2 class="text-info"><i class="fas fa-gamepad"></i> <span id="unhappyCount">0</span></h2>
+                            <p class="card-text">Need Playing</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h2 class="text-success"><i class="fas fa-crown"></i> <span id="rareCount">0</span></h2>
+                            <p class="card-text">Rare+ Pets</p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">➕ 收养新宠物</h5>
-                        <p class="card-text">寻找新的虚拟伙伴</p>
-                        <a href="#" class="btn btn-outline-success">收养宠物</a>
+
+            <!-- Quick Actions -->
+            <div class="row mb-5">
+                <div class="col-md-12">
+                    <h3 class="mb-4">Quick Actions</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">🐉 My Pets</h5>
+                                    <p class="card-text">View and manage all your virtual pets</p>
+                                    <a href="/pets" class="btn btn-outline-primary">View Pets</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">➕ Adopt New Pet</h5>
+                                    <p class="card-text">Find new virtual companions to adopt</p>
+                                    <a href="/pets/create" class="btn btn-outline-success">Adopt Pet</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">⚙️ Settings</h5>
+                                    <p class="card-text">Manage your account settings</p>
+                                    <a href="/auth/logout" class="btn btn-outline-secondary">Logout</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">⚙️ 设置</h5>
-                        <p class="card-text">管理你的账户设置</p>
-                        <a href="/auth/logout" class="btn btn-outline-secondary">退出登录</a>
+
+            <!-- Recent Pets Section -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="mb-4">Recent Pets</h3>
+                    <% if (typeof pets !== 'undefined' && pets.length > 0) { %>
+                        <div class="row">
+                            <% pets.slice(0, 3).forEach(pet => { %>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <% 
+                                                const speciesEmoji = {
+                                                    'dragon': '🐉',
+                                                    'cat': '🐱',
+                                                    'dog': '🐶',
+                                                    'rat': '🐀',
+                                                    'elf': '🧝',
+                                                    'robot': '🤖',
+                                                    'wolf': '🐺',
+                                                    'deer': '🦌',
+                                                    'duck': '🦆',
+                                                    'bear': '🐻'
+                                                };
+                                            %>
+                                            <%= speciesEmoji[pet.species] || '🐾' %> <%= pet.name %>
+                                        </h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">
+                                            <span class="badge bg-<%= 
+                                                pet.rarity === 'Legendary' ? 'danger' : 
+                                                pet.rarity === 'Epic' ? 'warning' :
+                                                pet.rarity === 'Rare' ? 'info' : 'secondary'
+                                            %>"><%= pet.rarity %></span>
+                                            <%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %>
+                                        </h6>
+                                        
+                                        <!-- Status Overview -->
+                                        <div class="mt-3">
+                                            <small class="d-block">
+                                                Hunger: 
+                                                <span class="<%= pet.stats.hunger < 30 ? 'status-low' : pet.stats.hunger < 70 ? 'status-medium' : 'status-high' %>">
+                                                    <%= pet.stats.hunger %>/100
+                                                </span>
+                                            </small>
+                                            <small class="d-block">
+                                                Happiness: 
+                                                <span class="<%= pet.stats.happiness < 30 ? 'status-low' : pet.stats.happiness < 70 ? 'status-medium' : 'status-high' %>">
+                                                    <%= pet.stats.happiness %>/100
+                                                </span>
+                                            </small>
+                                            <small class="d-block">
+                                                Energy: 
+                                                <span class="<%= pet.stats.energy < 30 ? 'status-low' : pet.stats.energy < 70 ? 'status-medium' : 'status-high' %>">
+                                                    <%= pet.stats.energy %>/100
+                                                </span>
+                                            </small>
+                                        </div>
+
+                                        <% if (pet.needsCare && pet.needsCare()) { %>
+                                            <div class="alert alert-warning py-2 mt-2">
+                                                <small>⚠️ Needs care!</small>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="/pets/<%= pet._id %>" class="btn btn-outline-primary btn-sm">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                        </div>
+                        
+                        <% if (pets.length > 3) { %>
+                            <div class="text-center mt-3">
+                                <a href="/pets" class="btn btn-primary">View All Pets (<%= pets.length %> total)</a>
+                            </div>
+                        <% } %>
+                        
+                    <% } else { %>
+                        <div class="text-center py-4">
+                            <h4>🐾 No pets yet!</h4>
+                            <p class="text-muted">You haven't adopted any pets yet. Start your journey by adopting your first virtual companion!</p>
+                            <a href="/pets/create" class="btn btn-primary btn-lg">Adopt Your First Pet</a>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <h3 class="mb-4">✨ Features</h3>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h1>🐉</h1>
+                                    <h5>10 Species</h5>
+                                    <p class="text-muted">Dragon, Cat, Dog, Rat, Elf, Robot, Wolf, Deer, Duck, Bear</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h1>🎮</h1>
+                                    <h5>Interactive Care</h5>
+                                    <p class="text-muted">Feed, play, and rest to keep your pets happy and healthy</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h1>🏆</h1>
+                                    <h5>Rarity System</h5>
+                                    <p class="text-muted">Common, Rare, Epic, and Legendary pets to collect</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card border-0 bg-light">
+                                <div class="card-body">
+                                    <h1>🌐</h1>
+                                    <h5>Cloud Storage</h5>
+                                    <p class="text-muted">Your pets are safely stored in MongoDB Atlas cloud</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<%- include('partials/footer') %>
+
+<!-- Simple JavaScript for Stats -->
+<script>
+// This would typically be populated from your backend
+// For now, we'll use placeholder values
+document.addEventListener('DOMContentLoaded', function() {
+    // These values would normally come from your server
+    const stats = {
+        petCount: <%= typeof pets !== 'undefined' ? pets.length : 0 %>,
+        hungryCount: <%= typeof pets !== 'undefined' ? pets.filter(p => p.stats.hunger < 30).length : 0 %>,
+        unhappyCount: <%= typeof pets !== 'undefined' ? pets.filter(p => p.stats.happiness < 30).length : 0 %>,
+        rareCount: <%= typeof pets !== 'undefined' ? pets.filter(p => p.rarity === 'Rare' || p.rarity === 'Epic' || p.rarity === 'Legendary').length : 0 %>
+    };
+    
+    document.getElementById('petCount').textContent = stats.petCount;
+    document.getElementById('hungryCount').textContent = stats.hungryCount;
+    document.getElementById('unhappyCount').textContent = stats.unhappyCount;
+    document.getElementById('rareCount').textContent = stats.rareCount;
+});
+</script>
+
+<%- include('partials/footer', { dbStatus: typeof dbStatus !== 'undefined' ? dbStatus : 'Connected' }) %>
