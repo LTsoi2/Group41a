@@ -1,35 +1,46 @@
-<%- include('../partials/header', { title: '用户注册' }) %>
+<%- include('../partials/header', { title: 'User Registration' }) %>
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <h2 class="text-center mb-4">用户注册</h2>
-        
-        <% if (error) { %>
-            <div class="alert alert-danger"><%= error %></div>
-        <% } %>
-        
-        <form method="POST" action="/auth/register">
-            <div class="mb-3">
-                <label class="form-label">用户名</label>
-                <input type="text" class="form-control" name="username" required>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center mb-0">User Registration</h2>
             </div>
-            <div class="mb-3">
-                <label class="form-label">邮箱</label>
-                <input type="email" class="form-control" name="email" required>
+            <div class="card-body">
+                <% if (error) { %>
+                    <div class="alert alert-danger"><%= error %></div>
+                <% } %>
+                
+                <form method="POST" action="/auth/register">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required 
+                               placeholder="Choose a username (min 3 characters)">
+                        <div class="form-text">Username must be at least 3 characters long.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required 
+                               placeholder="Enter your email address">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required 
+                               placeholder="Create a password (min 6 characters)">
+                        <div class="form-text">Password must be at least 6 characters long.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirmPassword" required 
+                               placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p>Already have an account? <a href="/auth/login">Login here</a></p>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">密码</label>
-                <input type="password" class="form-control" name="password" required>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">确认密码</label>
-                <input type="password" class="form-control" name="confirmPassword" required>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">注册</button>
-        </form>
-        
-        <div class="text-center mt-3">
-            <a href="/auth/login">已有账号？立即登录</a>
         </div>
     </div>
 </div>
-<%- include('../partials/footer') %>
+<%- include('../partials/footer', { dbStatus: dbStatus }) %>
