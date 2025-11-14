@@ -1,0 +1,48 @@
+/* 自定义样式 */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    transition: transform 0.2s;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.jumbotron {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+}
+
+.btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+}
+
+.progress {
+    height: 8px;
+}
+
+.badge {
+    font-size: 0.7em;
+}
+
+/* 宠物状态颜色 */
+.status-low {
+    color: #dc3545;
+}
+
+.status-medium {
+    color: #ffc107;
+}
+
+.status-high {
+    color: #28a745;
+}

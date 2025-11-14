@@ -1,0 +1,38 @@
+<%- include('partials/header', { title: '我的仪表板' }) %>
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1 class="display-4">欢迎, <%= username %>! 👋</h1>
+        <p class="lead">这是你的虚拟宠物管理仪表板</p>
+        
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">🐉 我的宠物</h5>
+                        <p class="card-text">查看和管理你的虚拟宠物</p>
+                        <a href="#" class="btn btn-outline-primary">查看宠物</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">➕ 收养新宠物</h5>
+                        <p class="card-text">寻找新的虚拟伙伴</p>
+                        <a href="#" class="btn btn-outline-success">收养宠物</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">⚙️ 设置</h5>
+                        <p class="card-text">管理你的账户设置</p>
+                        <a href="/auth/logout" class="btn btn-outline-secondary">退出登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('partials/footer') %>

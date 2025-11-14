@@ -1,0 +1,109 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/pets">我的宠物</a></li>
+                    <li class="breadcrumb-item active"><%= pet.name %></li>
+                </ol>
+            </nav>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">
+                        <span style="color: <%= pet.customizations.color %>">●</span>
+                        <%= pet.name %>
+                        <span class="badge bg-<%= 
+                            pet.rarity === '传说' ? 'danger' : 
+                            pet.rarity === '史诗' ? 'warning' :
+                            pet.rarity === '稀有' ? 'info' : 'secondary'
+                        %> float-end"><%= pet.rarity %></span>
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>基本信息</h5>
+                            <p><strong>物种:</strong> <%= pet.species %></p>
+                            <p><strong>出生日期:</strong> <%= pet.birthDate.toLocaleDateString() %></p>
+                            
+                            <% if (pet.traits.length > 0) { %>
+                                <p><strong>特征:</strong><br>
+                                <% pet.traits.forEach(trait => { %>
+                                    <span class="badge bg-primary me-1"><%= trait %></span>
+                                <% }) %>
+                                </p>
+                            <% } %>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>状态</h5>
+                            
+                            <div class="mb-3">
+                                <label>饥饿: <%= pet.stats.hunger %>/100</label>
+                                <div class="progress">
+                                    <div class="progress-bar bg-<%= pet.stats.hunger > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.hunger %>%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label>快乐: <%= pet.stats.happiness %>/100</label>
+                                <div class="progress">
+                                    <div class="progress-bar bg-<%= pet.stats.happiness > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.happiness %>%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label>能量: <%= pet.stats.energy %>/100</label>
+                                <div class="progress">
+                                    <div class="progress-bar bg-<%= pet.stats.energy > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.energy %>%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 照顾按钮 -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h5>照顾宠物</h5>
+                            <div class="d-grid gap-2 d-md-flex">
+                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
+                                    <input type="hidden" name="action" value="feed">
+                                    <button type="submit" class="btn btn-success">🍖 喂食</button>
+                                </form>
+                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
+                                    <input type="hidden" name="action" value="play">
+                                    <button type="submit" class="btn btn-info">🎾 玩耍</button>
+                                </form>
+                                <form method="POST" action="/pets/<%= pet._id %>/care">
+                                    <input type="hidden" name="action" value="rest">
+                                    <button type="submit" class="btn btn-warning">😴 休息</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (pet.needsCare()) { %>
+                        <div class="alert alert-warning mt-3">
+                            <strong>⚠️ 注意!</strong> 你的宠物需要照顾！请喂食、玩耍或让它休息。
+                        </div>
+                    <% } %>
+                </div>
+                <div class="card-footer">
+                    <form action="/pets/<%= pet._id %>/delete" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-danger" 
+                                onclick="return confirm('确定要送走<%= pet.name %>吗？这个操作无法撤销！')">
+                            🚪 送走宠物
+                        </button>
+                    </form>
+                    <a href="/pets" class="btn btn-outline-secondary float-end">返回列表</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer', { dbStatus: dbStatus }) %>

@@ -1,0 +1,91 @@
+<%- include('../partials/header', { title: title }) %>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="mb-4">收养新宠物 🎉</h1>
+
+            <% if (error) { %>
+                <div class="alert alert-danger"><%= error %></div>
+            <% } %>
+
+            <form method="POST" action="/pets/create">
+                <div class="mb-3">
+                    <label class="form-label">宠物名字</label>
+                    <input type="text" class="form-control" name="name" required 
+                           placeholder="给你的宠物起个可爱的名字">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">物种</label>
+                    <select class="form-select" name="species" required>
+                        <option value="">选择物种</option>
+                        <option value="龙">🐉 龙 - 强大的飞行生物</option>
+                        <option value="凤凰">🔥 凤凰 - 不朽的火鸟</option>
+                        <option value="机器人">🤖 机器人 - 未来的科技伙伴</option>
+                        <option value="灵狐">🦊 灵狐 - 聪明的神秘生物</option>
+                        <option value="水晶鹿">💎 水晶鹿 - 优雅的森林守护者</option>
+                        <option value="神秘生物">❓ 神秘生物 - 未知的惊喜</option>
+                        <option value="火焰猫">🐱 火焰猫 - 温暖的小家伙</option>
+                        <option value="雷电狼">⚡ 雷电狼 - 迅捷的猎手</option>
+                        <option value="水精灵">💧 水精灵 - 温柔的水之灵</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">稀有度</label>
+                    <select class="form-select" name="rarity">
+                        <option value="普通">普通 - 常见的伙伴</option>
+                        <option value="稀有">稀有 - 难得的发现</option>
+                        <option value="史诗">史诗 - 传奇的生物</option>
+                        <option value="传说">传说 - 神话般的存在</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">特征（可多选）</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="喷火" id="trait1">
+                                <label class="form-check-label" for="trait1">🔥 喷火</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="发光" id="trait2">
+                                <label class="form-check-label" for="trait2">💡 发光</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="会唱歌" id="trait3">
+                                <label class="form-check-label" for="trait3">🎵 会唱歌</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="飞行" id="trait4">
+                                <label class="form-check-label" for="trait4">✈️ 飞行</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="快速移动" id="trait5">
+                                <label class="form-check-label" for="trait5">⚡ 快速移动</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="traits" value="巨大化" id="trait6">
+                                <label class="form-check-label" for="trait6">🐘 巨大化</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">主题颜色</label>
+                    <input type="color" class="form-control form-control-color" name="color" value="#667eea" title="选择颜色">
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">收养宠物</button>
+                    <a href="/pets" class="btn btn-outline-secondary">返回宠物列表</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<%- include('../partials/footer', { dbStatus: dbStatus }) %>
