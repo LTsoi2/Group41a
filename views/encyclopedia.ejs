@@ -1,0 +1,230 @@
+<%- include('partials/header', { title: 'Pet Encyclopedia' }) %>
+<div class="container">
+    <!-- Encyclopedia Banner -->
+    <div class="encyclopedia-banner">
+        <div class="banner-content">
+            <h1 class="banner-title">Pet Encyclopedia</h1>
+            <p class="banner-subtitle">Discover All Virtual Creatures</p>
+        </div>
+    </div>
+
+    <!-- Introduction -->
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>Welcome to the Pet Encyclopedia! 📚</h3>
+                    <p class="lead">Explore all the amazing virtual creatures you can adopt and care for in your Digital Pet Sanctuary.</p>
+                    <p>Each pet has unique characteristics, rarity levels, and special traits that make them special companions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Pets Grid -->
+    <div class="row">
+        <% pets.forEach(pet => { %>
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 encyclopedia-card" style="border: 3px solid <%= pet.rarityColor %>;">
+                <div class="card-body text-center encyclopedia-card-body">
+                    <!-- Pet Image -->
+                    <div class="pet-image-container mb-3">
+                        <img src="<%= pet.imageUrl %>" alt="<%= pet.species %>" 
+                             class="encyclopedia-pet-image"
+                             >
+                    </div>
+                    
+                    <!-- Pet Info -->
+                    <h4 class="card-title">
+                        <%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %>
+                    </h4>
+                    
+                    <div class="mb-3">
+                        <span class="badge rarity-badge" style="background-color: <%= pet.rarityColor %>;">
+                            <%= pet.rarity %>
+                        </span>
+                    </div>
+                    
+                    <!-- Description -->
+                    <p class="card-text encyclopedia-description">
+                        <%= pet.description %>
+                    </p>
+                    
+                    <!-- Traits -->
+                    <div class="traits-section">
+                        <h6>Common Traits:</h6>
+                        <div class="traits-list">
+                            <% 
+                                const commonTraits = {
+                                    'dragon': ['Fire Breath', 'Flying', 'Giant'],
+                                    'cat': ['Fast Moving', 'Tiny', 'Invisible'],
+                                    'dog': ['Fast Moving', 'Can Sing', 'Glowing'],
+                                    'rat': ['Fast Moving', 'Tiny', 'Invisible'],
+                                    'elf': ['Glowing', 'Can Sing', 'Water Breathing'],
+                                    'robot': ['Glowing', 'Giant', 'Fire Breath'],
+                                    'wolf': ['Fast Moving', 'Water Breathing', 'Giant'],
+                                    'deer': ['Fast Moving', 'Water Breathing', 'Tiny'],
+                                    'duck': ['Water Breathing', 'Flying', 'Can Sing'],
+                                    'bear': ['Giant', 'Water Breathing', 'Fire Breath']
+                                };
+                                const traits = commonTraits[pet.species] || ['Mysterious', 'Unique', 'Special'];
+                            %>
+                            <% traits.forEach(trait => { %>
+                                <span class="badge bg-light text-dark me-1 mb-1"><%= trait %></span>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/pets/create?species=<%= pet.species %>" class="btn btn-primary btn-sm">Adopt This Pet</a>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h4>Encyclopedia Statistics</h4>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h5><%= pets.length %></h5>
+                            <p>Total Species</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>4</h5>
+                            <p>Rarity Levels</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>9</h5>
+                            <p>Unique Traits</p>
+                        </div>
+                        <div class="col-md-3">
+                            <h5>10+</h5>
+                            <p>Possible Combinations</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.encyclopedia-banner {
+    background-image: url('/images/encyclopediabanner.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+    padding: 4rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.encyclopedia-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.8) 0%, rgba(118, 75, 162, 0.8) 100%);
+    z-index: 1;
+}
+
+.banner-content {
+    position: relative;
+    color: white;
+    z-index: 2;
+    text-align: center;
+}
+
+.banner-title {
+    font-size: 3.5rem;
+    font-weight: normal;
+    letter-spacing: 3px;
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.banner-subtitle {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+.encyclopedia-card-body {
+    background-image: url('/images/petborder.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 1;
+}
+
+/* Add a subtle overlay to ensure text readability */
+.encyclopedia-card-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.85);
+    z-index: -1;
+    border-radius: 8px;
+}
+
+.encyclopedia-pet-image {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.encyclopedia-pet-image:hover {
+    transform: scale(1.15);
+}
+
+.encyclopedia-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+.encyclopedia-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.encyclopedia-description {
+    min-height: 80px;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.traits-section {
+    margin-top: 1rem;
+}
+
+.traits-list {
+    min-height: 60px;
+}
+
+.rarity-badge {
+    font-size: 1rem;
+    padding: 6px 12px;
+    color: white;
+}
+</style>
+
+<%- include('partials/footer', { dbStatus: typeof dbStatus !== 'undefined' ? dbStatus : 'Connected' }) %>

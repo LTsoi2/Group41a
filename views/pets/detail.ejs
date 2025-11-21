@@ -9,6 +9,11 @@
                 </ol>
             </nav>
 
+            <!-- Animation Overlay -->
+            <div id="animationOverlay" class="animation-overlay">
+                <img id="animationGif" src="" alt="Animation" class="animation-gif">
+            </div>
+
             <div class="card">
                 <div class="card-header">
                     <h2 class="mb-0">
@@ -37,6 +42,7 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <!-- Left Column - Pet Info -->
                         <div class="col-md-6">
                             <h5>Basic Information</h5>
                             <p><strong>Species:</strong> <%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %></p>
@@ -49,10 +55,9 @@
                                 <% }) %>
                                 </p>
                             <% } %>
-                        </div>
-                        
-                        <div class="col-md-6">
-                            <h5>Status</h5>
+                            
+                            <!-- Status Section -->
+                            <h5 class="mt-4">Status</h5>
                             
                             <div class="mb-3">
                                 <label>Hunger: <%= pet.stats.hunger %>/100</label>
@@ -78,6 +83,18 @@
                                 </div>
                             </div>
                         </div>
+                        
+                        <!-- Right Column - Pet Image -->
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <div class="pet-image-container mb-3">
+                                    <img src="<%= pet.imageUrl %>" 
+                                         alt="<%= pet.name %> the <%= pet.species %>" 
+                                         class="pet-detail-image">
+                                </div>
+                                <h4 class="pet-name"><%= pet.name %></h4>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Care buttons -->
@@ -85,17 +102,17 @@
                         <div class="col-12">
                             <h5>Care for Your Pet</h5>
                             <div class="d-grid gap-2 d-md-flex">
-                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
+                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2" id="feedForm">
                                     <input type="hidden" name="action" value="feed">
-                                    <button type="submit" class="btn btn-success">🍖 Feed</button>
+                                    <button type="submit" class="btn btn-success care-btn" data-action="feed">🍖 Feed</button>
                                 </form>
-                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2">
+                                <form method="POST" action="/pets/<%= pet._id %>/care" class="me-2" id="playForm">
                                     <input type="hidden" name="action" value="play">
-                                    <button type="submit" class="btn btn-info">🎾 Play</button>
+                                    <button type="submit" class="btn btn-info care-btn" data-action="play">🎾 Play</button>
                                 </form>
-                                <form method="POST" action="/pets/<%= pet._id %>/care">
+                                <form method="POST" action="/pets/<%= pet._id %>/care" id="restForm">
                                     <input type="hidden" name="action" value="rest">
-                                    <button type="submit" class="btn btn-warning">😴 Rest</button>
+                                    <button type="submit" class="btn btn-warning care-btn" data-action="rest">😴 Rest</button>
                                 </form>
                             </div>
                         </div>
@@ -120,4 +137,147 @@
         </div>
     </div>
 </div>
+
+<style>
+.pet-detail-image {
+    width: 280px;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.pet-detail-image:hover {
+    transform: scale(1.05);
+}
+
+.pet-name {
+    font-weight: bold;
+    color: #495057;
+    margin-top: 10px;
+    font-size: 1.5rem;
+}
+
+/* Animation Overlay Styles */
+.animation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.animation-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.animation-overlay.fade-out {
+    opacity: 0;
+}
+
+.animation-gif {
+    width: 400px;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pet-detail-image {
+        width: 220px;
+        height: 220px;
+        margin-bottom: 1rem;
+    }
+    
+    .pet-name {
+        font-size: 1.3rem;
+    }
+    
+    .animation-gif {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pet-detail-image {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .pet-name {
+        font-size: 1.2rem;
+    }
+    
+    .animation-gif {
+        width: 250px;
+        height: 250px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const careButtons = document.querySelectorAll('.care-btn');
+    const animationOverlay = document.getElementById('animationOverlay');
+    const animationGif = document.getElementById('animationGif');
+    
+    // Audio files
+    const audioFiles = {
+        feed: '/audio/eatingsound.mp3',
+        play: '/audio/playingsound.mp3',
+        rest: '/audio/sleepingsound.mp3'
+    };
+    
+    // GIF files
+    const gifFiles = {
+        feed: '/images/eating.gif',
+        play: '/images/playing.gif',
+        rest: '/images/sleeping.gif'
+    };
+    
+    careButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const action = this.getAttribute('data-action');
+            
+            // Play sound
+            const audio = new Audio(audioFiles[action]);
+            audio.play().catch(error => {
+                console.log('Audio play failed:', error);
+            });
+            
+            // Show animation
+            animationGif.src = gifFiles[action];
+            animationOverlay.classList.add('show');
+            
+            // Hide animation after 4 seconds with fade out
+            setTimeout(() => {
+                animationOverlay.classList.add('fade-out');
+                setTimeout(() => {
+                    animationOverlay.classList.remove('show', 'fade-out');
+                    // Submit the form after animation completes
+                    const form = this.closest('form');
+                    form.submit();
+                }, 500); // Fade out duration
+            }, 3000); // Display duration
+            
+            // Disable button to prevent multiple clicks
+            this.disabled = true;
+        });
+    });
+});
+</script>
+
 <%- include('../partials/footer', { dbStatus: dbStatus }) %>

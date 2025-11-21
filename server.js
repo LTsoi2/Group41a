@@ -92,6 +92,124 @@ app.get('/dashboard', async (req, res) => {
   }
 });
 
+//Pet Encyclopedia router
+app.get('/encyclopedia', async (req, res) => {
+  try {
+    const allSpecies = [
+      {
+        species: 'dragon',
+        rarity: 'Legendary',
+        description: 'Majestic flying creature with ancient wisdom and powerful breath attacks.',
+        imageUrl: '/images/dragon.png'
+      },
+      {
+        species: 'cat',
+        rarity: 'Common', 
+        description: 'Agile and independent companion with mysterious nocturnal habits.',
+        imageUrl: '/images/cat.png'
+      },
+      {
+        species: 'dog',
+        rarity: 'Common',
+        description: 'Loyal and energetic friend who loves to play and protect its owner.',
+        imageUrl: '/images/dog.png'
+      },
+      {
+        species: 'rat',
+        rarity: 'Common',
+        description: 'Clever and quick creature with excellent problem-solving skills.',
+        imageUrl: '/images/rat.png'
+      },
+      {
+        species: 'elf',
+        rarity: 'Rare',
+        description: 'Magical forest being with connection to nature and ancient magic.',
+        imageUrl: '/images/elf.png'
+      },
+      {
+        species: 'robot',
+        rarity: 'Epic',
+        description: 'Futuristic tech companion programmed for assistance and friendship.',
+        imageUrl: '/images/robot.png'
+      },
+      {
+        species: 'wolf',
+        rarity: 'Rare',
+        description: 'Wild and free spirit with strong pack instincts and keen senses.',
+        imageUrl: '/images/wolf.png'
+      },
+      {
+        species: 'deer',
+        rarity: 'Common',
+        description: 'Graceful forest dweller known for its speed and gentle nature.',
+        imageUrl: '/images/deer.png'
+      },
+      {
+        species: 'duck',
+        rarity: 'Common',
+        description: 'Cheerful water lover with excellent swimming and flying abilities.',
+        imageUrl: '/images/duck.png'
+      },
+      {
+        species: 'bear',
+        rarity: 'Epic',
+        description: 'Strong and protective creature with surprising intelligence and warmth.',
+        imageUrl: '/images/bear.png'
+      }
+    ];
+
+    const petsWithVirtuals = allSpecies.map(pet => {
+      const rarityColors = {
+        'Common': '#6c757d',
+        'Rare': '#17a2b8', 
+        'Epic': '#6f42c1',
+        'Legendary': '#e83e8c'
+      };
+      
+      return {
+        ...pet,
+        rarityColor: rarityColors[pet.rarity] || '#6c757d',
+        imageUrl: `/images/${pet.species}.png`
+      };
+    });
+
+    res.render('encyclopedia', {
+      title: 'Pet Encyclopedia',
+      pets: petsWithVirtuals,
+      dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    });
+  } catch (error) {
+    console.error('Encyclopedia error:', error);
+    res.status(500).render('error', {
+      title: 'Error',
+      message: 'Failed to load encyclopedia'
+    });
+  }
+});
+
+// Pet World Route
+app.get('/petworld', async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.redirect('/auth/login');
+    }
+
+    const pets = await VirtualPet.find({ owner: req.session.userId });
+    
+    res.render('petworld', {
+      title: 'Pet World',
+      pets: pets,
+      dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
+    });
+  } catch (error) {
+    console.error('Pet World error:', error);
+    res.status(500).render('error', {
+      title: 'Error',
+      message: 'Failed to load pet world'
+    });
+  }
+});
+
 // API status endpoint
 app.get('/api/status', (req, res) => {
   res.json({

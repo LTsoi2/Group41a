@@ -1,4 +1,4 @@
-/* public/css/style.css */
+/* public/css/style.css - Digital Pet Sanctuary with VT323 Font */
 :root {
     --primary-color: #667eea;
     --primary-dark: #5a6fd8;
@@ -15,52 +15,99 @@
     --legendary-color: #e83e8c;
 }
 
-/* General Styles */
+/* Import VT323 Font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Background using your local PNG file */
 body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
+    background-image: url('/images/Pbackground.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    position: relative;
+    font-family: 'VT323', monospace;
+    line-height: 1.4;
     color: #333;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    
+}
+
+/* Semi-transparent overlay for better readability */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.45);
+    z-index: -1;
 }
 
 /* Navbar Styling */
 .navbar-brand {
-    font-weight: bold;
-    font-size: 1.5rem;
+    font-weight: normal;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
 }
 
 .navbar-dark.bg-primary {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%) !important;
+}
+
+.navbar-nav .nav-link {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
 }
 
 /* Card Styling */
 .card {
+    background-color: rgba(255, 255, 255, 0.95);
     border: none;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
     margin-bottom: 1.5rem;
 }
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: white;
     border-bottom: none;
-    border-radius: 10px 10px 0 0 !important;
-    font-weight: 600;
+    border-radius: 8px 8px 0 0 !important;
+    font-weight: normal;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.card-text {
+    font-size: 1.1rem;
+    line-height: 1.3;
 }
 
 /* Button Styling */
 .btn {
-    border-radius: 20px;
-    padding: 10px 20px;
-    font-weight: 500;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-weight: normal;
     transition: all 0.3s ease;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    border: 2px solid transparent;
 }
 
 .btn-primary {
@@ -84,18 +131,39 @@ body {
     box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
 }
 
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
 /* Progress Bar Styling for Pet Stats */
 .progress {
-    height: 8px;
-    border-radius: 10px;
+    height: 12px;
+    border-radius: 6px;
     background-color: #e9ecef;
+    border: 1px solid #ccc;
 }
 
 .progress-bar {
-    border-radius: 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    line-height: 12px;
 }
 
 /* Rarity Badge Colors */
+.badge {
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    padding: 4px 8px;
+}
+
 .badge.bg-secondary { /* Common */
     background: linear-gradient(135deg, var(--common-color) 0%, #5a6268 100%) !important;
 }
@@ -112,28 +180,41 @@ body {
     background: linear-gradient(135deg, var(--legendary-color) 0%, #d91a72 100%) !important;
 }
 
-/* Pet Species Emojis and Styling */
-.pet-emoji {
-    font-size: 1.2em;
-    margin-right: 5px;
-}
-
 /* Form Styling */
 .form-control {
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    padding: 10px 15px;
+    border-radius: 6px;
+    border: 2px solid #ddd;
+    padding: 8px 12px;
     transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
 }
 
 .form-control:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    background-color: white;
 }
 
 .form-select {
-    border-radius: 10px;
-    padding: 10px 15px;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: rgba(255, 255, 255, 0.9);
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    border: 2px solid #ddd;
+}
+
+.form-label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    font-weight: normal;
+}
+
+.form-text {
+    font-size: 1rem;
+    opacity: 0.8;
 }
 
 .form-check-input:checked {
@@ -141,20 +222,27 @@ body {
     border-color: var(--primary-color);
 }
 
+.form-check-label {
+    font-size: 1.1rem;
+}
+
 /* Alert Styling */
 .alert {
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
+    font-size: 1.1rem;
 }
 
 .alert-warning {
     background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
     color: #856404;
+    border: 1px solid #ffeaa7;
 }
 
 .alert-danger {
     background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
     color: #721c24;
+    border: 1px solid #f1b0b7;
 }
 
 .alert-success {
@@ -165,51 +253,79 @@ body {
 
 /* Jumbotron/Hero Section */
 .jumbotron {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
     color: white;
-    border-radius: 15px;
-    padding: 3rem 2rem;
+    border-radius: 10px;
+    padding: 2rem;
     margin-bottom: 2rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
 }
+
+.display-4 {
+    font-size: 3rem;
+    font-weight: normal;
+    letter-spacing: 1px;
+}
+
+.lead {
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.1rem; }
 
 /* Pet Status Indicators */
 .status-low {
     color: var(--danger-color);
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .status-medium {
     color: var(--warning-color);
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .status-high {
     color: var(--success-color);
-    font-weight: bold;
+    font-weight: normal;
 }
 
 /* Footer Styling */
 footer.bg-dark {
-    background: linear-gradient(135deg, #343a40 0%, #23272b 100%) !important;
+    background: linear-gradient(135deg, rgba(52, 58, 64, 0.95) 0%, rgba(35, 39, 43, 0.95) 100%) !important;
     margin-top: 3rem;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
+    font-size: 1rem;
 }
 
 /* Empty State Styling */
 .empty-state {
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
     text-align: center;
 }
 
 .empty-state h3 {
     color: var(--common-color);
     margin-bottom: 1rem;
+    font-size: 1.8rem;
 }
 
 /* Breadcrumb Styling */
 .breadcrumb {
     background-color: transparent;
-    padding: 0.75rem 0;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
 }
 
 .breadcrumb-item a {
@@ -223,27 +339,51 @@ footer.bg-dark {
 
 /* Care Button Group */
 .care-buttons .btn {
-    margin: 0 5px;
-    border-radius: 10px;
+    margin: 0 3px;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+/* Ensure content stays above background */
+.container {
+    position: relative;
+    z-index: 1;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        font-size: 16px;
+        background-attachment: scroll;
+    }
+    
     .jumbotron {
-        padding: 2rem 1rem;
+        padding: 1.5rem 1rem;
     }
     
     .display-4 {
         font-size: 2rem;
     }
     
+    .lead {
+        font-size: 1.2rem;
+    }
+    
     .btn-lg {
-        padding: 8px 16px;
+        padding: 6px 14px;
         font-size: 1rem;
     }
     
     .card-body {
         padding: 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+    .nav-link {
+        font-size: 1.1rem;
     }
 }
 
@@ -270,5 +410,357 @@ footer.bg-dark {
 }
 
 .shadow-custom {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Pet status progress bar colors */
+.progress-bar.bg-success {
+    background: linear-gradient(135deg, var(--success-color) 0%, #20c997 100%) !important;
+}
+
+.progress-bar.bg-warning {
+    background: linear-gradient(135deg, var(--warning-color) 0%, #ffd152 100%) !important;
+}
+
+.progress-bar.bg-danger {
+    background: linear-gradient(135deg, var(--danger-color) 0%, #e4606d 100%) !important;
+}
+
+/* Table Styling */
+.table {
+    font-size: 1.1rem;
+}
+
+.table th {
+    font-weight: normal;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* Small text elements */
+small, .small {
+    font-size: 1rem;
+}
+
+/* List styling */
+.list-group-item {
+    font-size: 1.1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Code and pre elements for monospace consistency */
+code, pre {
+    font-family: 'VT323', monospace;
+}
+
+/* Retro gaming style enhancements */
+.retro-border {
+    border: 2px solid #333;
+    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.pixel-art {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+
+/* Floating GIF Animation */
+.floating-element {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+    width: 400px;  
+    height: 400px; 
+}
+
+.floating-element-1 {
+    top: 5%;
+    left: 3%;
+    animation-delay: 0s;
+}
+
+.floating-element-2 {
+    top: 15%;
+    right: 5%;
+    animation-delay: 2s;
+}
+
+.floating-element-3 {
+    bottom: 10%;
+    left: 8%;
+    animation-delay: 4s;
+}
+
+.floating-element-4 {
+    bottom: 20%;
+    right: 3%;
+    animation-delay: 1s;
+}
+
+.floating-element-5 {
+    top: 40%;
+    left: 45%;
+    animation-delay: 3s;
+}
+
+.floating-element-6 {
+    top: 25%;
+    left: 20%;
+    animation-delay: 5s;
+}
+
+.floating-element-7 {
+    top: 60%;
+    right: 15%;
+    animation-delay: 1.5s;
+}
+
+.floating-element-8 {
+    bottom: 30%;
+    left: 70%;
+    animation-delay: 3.5s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    25% {
+        transform: translateY(-40px) rotate(10deg) scale(1.1);
+    }
+    50% {
+        transform: translateY(-20px) rotate(5deg) scale(1.05);
+    }
+    75% {
+        transform: translateY(-30px) rotate(-8deg) scale(1.08);
+    }
+}
+
+/* 不同的动画速度和大小变体 */
+.floating-element.slow {
+    animation-duration: 8s;
+    width: 180px;  /* 更大的慢速元素 */
+    height: 180px;
+}
+
+.floating-element.fast {
+    animation-duration: 4s;
+    width: 120px;  /* 稍小的快速元素 */
+    height: 120px;
+}
+
+.floating-element.large {
+    width: 200px;  /* 超大元素 */
+    height: 200px;
+    animation-duration: 10s;
+}
+
+.floating-element.xlarge {
+    width: 250px;  /* 特大元素 */
+    height: 250px;
+    animation-duration: 12s;
+}
+
+/* 图片样式优化 */
+.floating-element img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+/* 为不同元素添加不同的视觉效果 */
+.floating-element-1 img {
+    filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.5));
+}
+
+.floating-element-2 img {
+    filter: drop-shadow(0 4px 8px rgba(118, 75, 162, 0.5));
+}
+
+.floating-element-3 img {
+    filter: drop-shadow(0 4px 8px rgba(80, 167, 69, 0.5));
+}
+
+.floating-element-4 img {
+    filter: drop-shadow(0 4px 8px rgba(220, 53, 69, 0.5));
+}
+
+/* 旋转动画变体 */
+@keyframes float-rotate {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-30px) rotate(180deg) scale(1.1);
+    }
+}
+
+.floating-element.rotate {
+    animation: float-rotate 8s ease-in-out infinite;
+}
+
+/* 弹跳动画变体 */
+@keyframes float-bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    40% {
+        transform: translateY(-50px) scale(1.15);
+    }
+    60% {
+        transform: translateY(-25px) scale(1.08);
+    }
+}
+
+.floating-element.bounce {
+    animation: float-bounce 5s ease-in-out infinite;
+}
+
+/* 响应式设计 - 在移动设备上适当缩小 */
+@media (max-width: 768px) {
+    .floating-element {
+        width: 80px;  /* 在手机上适当缩小 */
+        height: 80px;
+    }
+    
+    .floating-element.large {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .floating-element.xlarge {
+        width: 120px;
+        height: 120px;
+    }
+    
+    /* 在移动设备上减少浮动元素数量 */
+    .floating-element-5,
+    .floating-element-6,
+    .floating-element-7,
+    .floating-element-8 {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .floating-element {
+        width: 60px;
+        height: 60px;
+    }
+    
+    /* 在非常小的屏幕上只保留少数元素 */
+    .floating-element-3,
+    .floating-element-4,
+    .floating-element-5,
+    .floating-element-6,
+    .floating-element-7,
+    .floating-element-8 {
+        display: none;
+    }
+}
+/* Dashboard Banner Styling */
+.dashboard-banner {
+    background-image: url('/images/banner-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%);
+    z-index: 1;
+}
+
+.dashboard-banner-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    text-align: center;
+}
+
+/* Banner text styling with VT323 font */
+.banner-title {
+    font-size: 3rem;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
+}
+
+.banner-subtitle {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+}
+
+.banner-description {
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Pet emojis in banner */
+.banner-pet-emoji {
+    font-size: 2rem;
+    margin: 0 5px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+/* Responsive banner */
+@media (max-width: 768px) {
+    .dashboard-banner {
+        padding: 2rem 1rem;
+    }
+    
+    .banner-title {
+        font-size: 2rem;
+    }
+    
+    .banner-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .banner-description {
+        font-size: 1rem;
+    }
+    
+    .floating-element {
+        display: none; 
+    }
 }

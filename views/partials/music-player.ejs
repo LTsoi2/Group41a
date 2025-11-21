@@ -1,0 +1,164 @@
+<!-- views/partials/music-player.ejs -->
+<div id="music-player" class="music-player">
+    <audio id="bgm" loop>
+        <source src="/audio/bgm.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <div class="music-controls">
+        <button id="playBtn" class="btn btn-sm btn-outline-primary">
+            ♫ Play BGM
+        </button>
+        <button id="pauseBtn" class="btn btn-sm btn-outline-secondary" style="display: none;">
+            ❚❚ Pause
+        </button>
+        <button id="muteBtn" class="btn btn-sm btn-outline-warning">
+            🔇 Mute
+        </button>
+        <span class="volume-control">
+            <label>Volume:</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5">
+        </span>
+    </div>
+</div>
+
+<style>
+.music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 10px 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--primary-color);
+    z-index: 1000;
+    font-family: 'VT323', monospace;
+}
+
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.music-controls .btn {
+    font-size: 0.9rem;
+    padding: 4px 8px;
+    border-radius: 5px;
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.volume-control label {
+    margin: 0;
+    white-space: nowrap;
+}
+
+#volumeSlider {
+    width: 80px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .music-player {
+        bottom: 10px;
+        right: 10px;
+        left: 10px;
+        padding: 8px 12px;
+    }
+    
+    .music-controls {
+        justify-content: center;
+    }
+    
+    .volume-control {
+        flex: 1;
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bgm = document.getElementById('bgm');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    
+    // 设置初始音量
+    bgm.volume = volumeSlider.value;
+    
+    // 播放按钮事件
+    playBtn.addEventListener('click', function() {
+        bgm.play().catch(error => {
+            console.log('Auto-play prevented:', error);
+            // 如果自动播放被阻止，显示用户交互提示
+            alert('Click the Play button to start background music!');
+        });
+        playBtn.style.display = 'none';
+        pauseBtn.style.display = 'inline-block';
+    });
+    
+    // 暂停按钮事件
+    pauseBtn.addEventListener('click', function() {
+        bgm.pause();
+        playBtn.style.display = 'inline-block';
+        pauseBtn.style.display = 'none';
+    });
+    
+    // 静音按钮事件
+    muteBtn.addEventListener('click', function() {
+        bgm.muted = !bgm.muted;
+        muteBtn.textContent = bgm.muted ? '🔊 Unmute' : '🔇 Mute';
+        muteBtn.classList.toggle('btn-outline-warning');
+        muteBtn.classList.toggle('btn-outline-success');
+    });
+    
+    // 音量滑块事件
+    volumeSlider.addEventListener('input', function() {
+        bgm.volume = volumeSlider.value;
+    });
+    
+    // 自动播放（可能会被浏览器阻止）
+    const tryAutoPlay = () => {
+        bgm.play().then(() => {
+            playBtn.style.display = 'none';
+            pauseBtn.style.display = 'inline-block';
+        }).catch(error => {
+            console.log('Auto-play was prevented:', error);
+            // 保持播放按钮可见
+            playBtn.style.display = 'inline-block';
+            pauseBtn.style.display = 'none';
+        });
+    };
+    
+    // 页面加载后尝试自动播放
+    setTimeout(tryAutoPlay, 1000);
+    
+    // 处理音频结束事件（确保循环）
+    bgm.addEventListener('ended', function() {
+        bgm.currentTime = 0;
+        bgm.play();
+    });
+    
+    // 保存音量设置到 localStorage
+    volumeSlider.addEventListener('change', function() {
+        localStorage.setItem('bgmVolume', volumeSlider.value);
+    });
+    
+    // 加载保存的音量设置
+    const savedVolume = localStorage.getItem('bgmVolume');
+    if (savedVolume) {
+        volumeSlider.value = savedVolume;
+        bgm.volume = savedVolume;
+    }
+});
+</script>

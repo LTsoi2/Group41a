@@ -1,0 +1,186 @@
+<%- include('partials/header', { title: 'Pet World' }) %>
+<div class="pet-world-container">
+    <!-- Pet World Background -->
+    <div class="pet-world-background"></div>
+    
+    <!-- User's Pets in Random Positions -->
+    <% if (typeof pets !== 'undefined' && pets.length > 0) { %>
+        <% pets.forEach((pet, index) => { %>
+        <div class="world-pet" 
+             style="top: <%= Math.random() * 70 + 15 %>%; 
+                    left: <%= Math.random() * 80 + 10 %>%; 
+                    animation-delay: <%= index * 0.5 %>s;"
+             data-pet-id="<%= pet._id %>">
+                <img src="<%= pet.imageUrl %>" alt="<%= pet.name %>" class="world-pet-image">
+                <h6><%= pet.name %></h6>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    <% } else { %>
+        <div class="no-pets-message">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h3>🌍 Welcome to Pet World!</h3>
+                    <p class="lead">This is where your pets come to life and explore together.</p>
+                    <p>Adopt some pets first to see them playing in this magical world!</p>
+                    <a href="/pets/create" class="btn btn-primary btn-lg me-3">Adopt Your First Pet</a>
+                    <a href="/encyclopedia" class="btn btn-outline-info">View Encyclopedia</a>
+                </div>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<style>
+.pet-world-container {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 200px);
+    min-height: 600px;
+    overflow: hidden;
+}
+
+.pet-world-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/images/petworldbackground.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.pet-world-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 2;
+}
+
+.world-pet {
+    position: absolute;
+    z-index: 3;
+    cursor: pointer;
+    animation: float-world 6s ease-in-out infinite;
+    transition: transform 0.3s ease;
+}
+
+.world-pet:hover {
+    transform: scale(1.2);
+    z-index: 4;
+}
+
+@keyframes float-world {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+        transform: translateY(-20px) rotate(5deg);
+    }
+    66% {
+        transform: translateY(10px) rotate(-5deg);
+    }
+}
+
+.pet-world-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 3px solid;
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.pet-world-card:hover {
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+}
+
+.world-pet-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.pet-world-info h6 {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.world-rarity-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    color: white;
+}
+
+.no-pets-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    width: 90%;
+    max-width: 500px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .pet-world-container {
+        height: calc(100vh - 150px);
+        min-height: 500px;
+    }
+    
+    .world-pet-image {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .pet-world-card {
+        padding: 6px;
+    }
+    
+    .pet-world-info h6 {
+        font-size: 0.8rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event to all world pets
+    const worldPets = document.querySelectorAll('.world-pet');
+    worldPets.forEach(pet => {
+        pet.addEventListener('click', function() {
+            const petId = this.getAttribute('data-pet-id');
+            window.location.href = `/pets/${petId}`;
+        });
+    });
+    
+    // Add some interactive effects
+    worldPets.forEach(pet => {
+        pet.addEventListener('mouseenter', function() {
+            this.style.animationPlayState = 'paused';
+        });
+        
+        pet.addEventListener('mouseleave', function() {
+            this.style.animationPlayState = 'running';
+        });
+    });
+});
+</script>
+
+<%- include('partials/footer', { dbStatus: typeof dbStatus !== 'undefined' ? dbStatus : 'Connected' }) %>

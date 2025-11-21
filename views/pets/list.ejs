@@ -1,11 +1,14 @@
-<%- include('../partials/header', { title: title }) %>
+<%- include('../partials/header', { title: 'My Pets' }) %>
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>My Virtual Pets 🐾</h1>
-        <a href="/pets/create" class="btn btn-primary">➕ Adopt New Pet</a>
+        <div>
+            <a href="/pets/create" class="btn btn-primary me-2">➕ Adopt New Pet</a>
+            <a href="/encyclopedia" class="btn btn-outline-info me-2">📚 Encyclopedia</a>
+            <a href="/petworld" class="btn btn-outline-success">🌍 Pet World</a>
+        </div>
     </div>
 
-    <!-- Safe error check -->
     <% if (typeof error !== 'undefined' && error) { %>
         <div class="alert alert-danger"><%= error %></div>
     <% } %>
@@ -16,36 +19,23 @@
                 <h3>🐾 No pets yet!</h3>
                 <p class="text-muted mb-4">Adopt your first virtual pet to start the adventure</p>
                 <a href="/pets/create" class="btn btn-primary btn-lg me-3">Adopt First Pet</a>
-                <a href="/" class="btn btn-outline-secondary">Back to Home</a>
-                
-                <div class="mt-5">
-                    <h5>🎯 How to get started?</h5>
-                    <div class="row mt-3 justify-content-center">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-body text-start">
-                                    <ol>
-                                        <li class="mb-2">Click "Adopt New Pet" button</li>
-                                        <li class="mb-2">Give your pet a cute name</li>
-                                        <li class="mb-2">Choose species and traits</li>
-                                        <li class="mb-2">Set rarity level</li>
-                                        <li>Start caring for your virtual companion!</li>
-                                    </ol>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <a href="/encyclopedia" class="btn btn-outline-info">View Pet Encyclopedia</a>
             </div>
         </div>
     <% } else { %>
         <div class="row">
             <% pets.forEach(pet => { %>
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-body">
+                <div class="card h-100 pet-card" style="border: 3px solid <%= pet.rarityColor %>; border-radius: 15px;">
+                    <div class="card-body text-center">
+                        <!-- Pet Image with Rarity Border -->
+                        <div class="pet-image-container mb-3">
+                            <img src="<%= pet.imageUrl %>" alt="<%= pet.species %>" 
+                                 class="pet-image" 
+                                 style="border: 2px solid <%= pet.rarityColor %>; border-radius: 10px;">
+                        </div>
+                        
                         <h5 class="card-title">
-                            <!-- Removed color dot, using emoji based on species -->
                             <% 
                                 const speciesEmoji = {
                                     'dragon': '🐉',
@@ -63,42 +53,34 @@
                             <%= speciesEmoji[pet.species] || '🐾' %> <%= pet.name %>
                         </h5>
                         <h6 class="card-subtitle mb-2 text-muted">
-                            <span class="badge bg-<%= 
-                                pet.rarity === 'Legendary' ? 'danger' : 
-                                pet.rarity === 'Epic' ? 'warning' :
-                                pet.rarity === 'Rare' ? 'info' : 'secondary'
-                            %>"><%= pet.rarity %></span>
+                            <span class="badge" style="background-color: <%= pet.rarityColor %>; color: white;">
+                                <%= pet.rarity %>
+                            </span>
                             <%= pet.species.charAt(0).toUpperCase() + pet.species.slice(1) %>
                         </h6>
                         
-                        <div class="mb-3">
-                            <% if (pet.traits && pet.traits.length > 0) { %>
-                                <% pet.traits.forEach(trait => { %>
-                                    <span class="badge bg-light text-dark me-1 mb-1"><%= trait %></span>
-                                <% }) %>
-                            <% } %>
-                        </div>
-
                         <!-- Status bars -->
-                        <div class="mb-2">
-                            <small>Hunger: <%= pet.stats.hunger %>/100</small>
-                            <div class="progress mb-1">
-                                <div class="progress-bar bg-<%= pet.stats.hunger > 50 ? 'success' : 'warning' %>" 
-                                     style="width: <%= pet.stats.hunger %>%"></div>
+                        <div class="pet-status mt-3">
+                            <div class="mb-2">
+                                <small>Hunger: <%= pet.stats.hunger %>/100</small>
+                                <div class="progress mb-1">
+                                    <div class="progress-bar bg-<%= pet.stats.hunger > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.hunger %>%"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-2">
-                            <small>Happiness: <%= pet.stats.happiness %>/100</small>
-                            <div class="progress mb-1">
-                                <div class="progress-bar bg-<%= pet.stats.happiness > 50 ? 'success' : 'warning' %>" 
-                                     style="width: <%= pet.stats.happiness %>%"></div>
+                            <div class="mb-2">
+                                <small>Happiness: <%= pet.stats.happiness %>/100</small>
+                                <div class="progress mb-1">
+                                    <div class="progress-bar bg-<%= pet.stats.happiness > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.happiness %>%"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <small>Energy: <%= pet.stats.energy %>/100</small>
-                            <div class="progress mb-1">
-                                <div class="progress-bar bg-<%= pet.stats.energy > 50 ? 'success' : 'warning' %>" 
-                                     style="width: <%= pet.stats.energy %>%"></div>
+                            <div class="mb-3">
+                                <small>Energy: <%= pet.stats.energy %>/100</small>
+                                <div class="progress mb-1">
+                                    <div class="progress-bar bg-<%= pet.stats.energy > 50 ? 'success' : 'warning' %>" 
+                                         style="width: <%= pet.stats.energy %>%"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -108,7 +90,7 @@
                             </div>
                         <% } %>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer text-center">
                         <a href="/pets/<%= pet._id %>" class="btn btn-outline-primary btn-sm">View Details</a>
                         <form action="/pets/<%= pet._id %>/delete" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-outline-danger btn-sm" 
@@ -123,4 +105,33 @@
         </div>
     <% } %>
 </div>
+
+<style>
+.pet-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pet-image {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.pet-image:hover {
+    transform: scale(1.1);
+}
+
+.pet-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pet-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+</style>
+
 <%- include('../partials/footer', { dbStatus: typeof dbStatus !== 'undefined' ? dbStatus : 'Connected' }) %>

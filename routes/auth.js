@@ -3,25 +3,25 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const router = express.Router();
 
-// 注册页面
+// Registration page
 router.get('/register', (req, res) => {
   res.render('auth/register', { 
-    title: '用户注册',
+    title: 'User Registration',
     error: null,
-    dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
   });
 });
 
-// 注册处理
+// Registration handling
 router.post('/register', async (req, res) => {
   try {
     const { username, email, password, confirmPassword } = req.body;
     
     if (password !== confirmPassword) {
       return res.render('auth/register', {
-        title: '用户注册',
-        error: '密码不匹配',
-        dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+        title: 'User Registration',
+        error: 'Passwords do not match',
+        dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
       });
     }
     
@@ -33,28 +33,28 @@ router.post('/register', async (req, res) => {
     
     res.redirect('/dashboard');
   } catch (error) {
-    let errorMessage = '注册失败';
+    let errorMessage = 'Registration failed';
     if (error.code === 11000) {
-      errorMessage = '用户名或邮箱已存在';
+      errorMessage = 'Username or email already exists';
     }
     res.render('auth/register', {
-      title: '用户注册',
+      title: 'User Registration',
       error: errorMessage,
-      dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+      dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
     });
   }
 });
 
-// 登录页面
+// Login page
 router.get('/login', (req, res) => {
   res.render('auth/login', {
-    title: '用户登录',
+    title: 'User Login',
     error: null,
-    dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+    dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
   });
 });
 
-// 登录处理
+// Login handling
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -62,18 +62,18 @@ router.post('/login', async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) {
       return res.render('auth/login', {
-        title: '用户登录',
-        error: '用户不存在',
-        dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+        title: 'User Login',
+        error: 'User does not exist',
+        dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
       });
     }
     
     const isPasswordCorrect = await user.correctPassword(password, user.password);
     if (!isPasswordCorrect) {
       return res.render('auth/login', {
-        title: '用户登录',
-        error: '密码错误',
-        dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+        title: 'User Login',
+        error: 'Incorrect password',
+        dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
       });
     }
     
@@ -83,14 +83,14 @@ router.post('/login', async (req, res) => {
     res.redirect('/dashboard');
   } catch (error) {
     res.render('auth/login', {
-      title: '用户登录',
-      error: '登录失败',
-      dbStatus: mongoose.connection.readyState === 1 ? '已连接' : '断开'
+      title: 'User Login',
+      error: 'Login failed',
+      dbStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
     });
   }
 });
 
-// 退出登录
+// Logout
 router.get('/logout', (req, res) => {
   req.session = null;
   res.redirect('/');
